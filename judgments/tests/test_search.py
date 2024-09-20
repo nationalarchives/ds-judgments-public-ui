@@ -17,6 +17,12 @@ from judgments.tests.utils.assertions import (
     assert_response_not_contains_text,
 )
 
+# DRAGON -- all these tests with ewhc/ch etc aren't testing the right thing.
+# We also need to make sure that edge cases like the QB/KB work
+# We also need to make sure Marklogic is updated to have the correct behaviour
+# Should we support old search URLs too?
+# The search form raises an error for ewhc/ch now, but doesn't highlight where (because there is nowhere)
+
 
 class TestBrowseResults(TestCase):
     @patch("judgments.views.browse.api_client")
@@ -220,7 +226,7 @@ class TestSearchResults(TestCase):
     ):
         """
         GIVEN a client for making HTTP requests
-        WHEN a GET request is made to "/judgments/search?court=ewhc/ch&court=ewhc/ipec"
+        WHEN a GET request is made to "/judgments/search?court=EWHC-Chancery&court=EWHC-Chancery-IPEC"
         THEN the response should contain the expected applied filters HTML
         AND the `search_judgments_and_parse_response` function should be called with the correct court string.
 
@@ -239,7 +245,7 @@ class TestSearchResults(TestCase):
                  tabindex="0"
                  draggable="false"
                  class="results-search-component__removable-options-link"
-                 href="/judgments/search?query=&amp;court=ewhc/ipec&amp;judge=&amp;party=&amp;order=-date&amp;page="
+                 href="/judgments/search?query=&amp;court=EWHC-Chancery-IPEC&amp;judge=&amp;party=&amp;order=-date&amp;page="
                  title="High Court (Chancery Division)">
                 <span class="results-search-component__removable-options-value">
                   <span class="results-search-component__removable-options-value-text">
@@ -254,7 +260,7 @@ class TestSearchResults(TestCase):
                  tabindex="0"
                  draggable="false"
                  class="results-search-component__removable-options-link"
-                 href="/judgments/search?query=&amp;court=ewhc/ch&amp;judge=&amp;party=&amp;order=-date&amp;page="
+                 href="/judgments/search?query=&amp;court=EWHC-Chancery&amp;judge=&amp;party=&amp;order=-date&amp;page="
                  title="High Court (Intellectual Property Enterprise Court)">
                 <span class="results-search-component__removable-options-value">
                   <span class="results-search-component__removable-options-value-text">
@@ -265,13 +271,13 @@ class TestSearchResults(TestCase):
             </li>
         </ul>
 """
-        response = self.client.get("/judgments/search?court=ewhc/ch&court=ewhc/ipec")
+        response = self.client.get("/judgments/search?court=EWHC-Chancery&court=EWHC-Chancery-IPEC")
 
         mock_search_judgments_and_parse_response.assert_called_with(
             mock_api_client,
             SearchParameters(
                 query="",
-                court="ewhc/ch,ewhc/ipec",
+                court="EWHC-Chancery,EWHC-Chancery-IPEC",
                 order="-date",
                 judge="",
                 party="",
@@ -307,7 +313,7 @@ class TestSearchResults(TestCase):
         mock_search_judgments_and_parse_response.return_value = FakeSearchResponse()
 
         response = self.client.get(
-            "/judgments/search?court=ewhc/ch&court=ewhc/ipec&from_date_0=1&from_date_1=1&from_date_2=2011"
+            "/judgments/search?court=EWHC-Chancery&court=EWHC-Chancery-IPEC&from_date_0=1&from_date_1=1&from_date_2=2011"
         )
 
         expected_applied_filters_html = """
@@ -317,7 +323,7 @@ class TestSearchResults(TestCase):
                  tabindex="0"
                  draggable="false"
                  class="results-search-component__removable-options-link"
-                 href="/judgments/search?query=&amp;court=ewhc/ch&amp;court=ewhc/ipec&amp;judge=&amp;party=&amp;order=-date&amp;page=">
+                 href="/judgments/search?query=&amp;court=EWHC-Chancery&amp;court=EWHC-Chancery-IPEC&amp;judge=&amp;party=&amp;order=-date&amp;page=">
                  <span class="results-search-component__removable-options-key">From:</span>
                  <span class="results-search-component__removable-options-value">
                    <span class="results-search-component__removable-options-value-text"> 01 Jan 2011</span>
@@ -329,7 +335,7 @@ class TestSearchResults(TestCase):
                  tabindex="0"
                  draggable="false"
                  class="results-search-component__removable-options-link"
-                 href="/judgments/search?from_date_0=1&amp;from_date_1=1&amp;from_date_2=2011&amp;query=&amp;court=ewhc/ipec&amp;judge=&amp;party=&amp;order=-date&amp;page="
+                 href="/judgments/search?from_date_0=1&amp;from_date_1=1&amp;from_date_2=2011&amp;query=&amp;court=EWHC-Chancery-IPEC&amp;judge=&amp;party=&amp;order=-date&amp;page="
                  title="High Court (Chancery Division)">
                 <span class="results-search-component__removable-options-value">
                   <span class="results-search-component__removable-options-value-text">
@@ -343,7 +349,7 @@ class TestSearchResults(TestCase):
                  tabindex="0"
                  draggable="false"
                  class="results-search-component__removable-options-link"
-                 href="/judgments/search?from_date_0=1&amp;from_date_1=1&amp;from_date_2=2011&amp;query=&amp;court=ewhc/ch&amp;judge=&amp;party=&amp;order=-date&amp;page="
+                 href="/judgments/search?from_date_0=1&amp;from_date_1=1&amp;from_date_2=2011&amp;query=&amp;court=EWHC-Chancery&amp;judge=&amp;party=&amp;order=-date&amp;page="
                  title="High Court (Intellectual Property Enterprise Court)">
                 <span class="results-search-component__removable-options-value">
                   <span class="results-search-component__removable-options-value-text">
@@ -359,7 +365,7 @@ class TestSearchResults(TestCase):
             mock_api_client,
             SearchParameters(
                 query="",
-                court="ewhc/ch,ewhc/ipec",
+                court="EWHC-Chancery,EWHC-Chancery-IPEC",
                 order="-date",
                 judge="",
                 party="",
