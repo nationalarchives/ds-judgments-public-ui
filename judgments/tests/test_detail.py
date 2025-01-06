@@ -482,7 +482,7 @@ class TestDocumentHeadings(TestCase):
                     neutral_citation="Judgment_A_NCN",
                 )
             else:
-                raise DocumentNotFoundError()
+                raise DocumentNotFoundError(document_uri)
 
         mock_get_document_by_uri.side_effect = get_document_by_uri_side_effect
         response = self.client.get("/eat/2023/1/press-summary/1")
