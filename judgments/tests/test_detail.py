@@ -227,6 +227,7 @@ class TestPressSummaryLabel(TestCaseWithMockAPI):
 class TestViewRelatedDocumentButton:
     @patch("judgments.views.detail.detail_html.DocumentPdf", autospec=True)
     @patch("judgments.views.detail.detail_html.get_published_document_by_uri")
+    @patch("judgments.resolvers.document_resolver_engine.api_client", side_effect=echo_resolution)
     @pytest.mark.parametrize(
         "uri,expected_text,expected_href,document_class_factory",
         [
@@ -246,6 +247,7 @@ class TestViewRelatedDocumentButton:
     )
     def test_view_related_document_button_when_document_with_related_document(
         self,
+        mock_api_client,
         mock_get_document_by_uri,
         mock_pdf,
         uri,
@@ -274,6 +276,7 @@ class TestViewRelatedDocumentButton:
 
     @patch("judgments.views.detail.detail_html.DocumentPdf", autospec=True)
     @patch("judgments.views.detail.detail_html.get_published_document_by_uri")
+    @patch("judgments.resolvers.document_resolver_engine.api_client", side_effect=echo_resolution)
     @pytest.mark.parametrize(
         "uri,expected_text,expected_href,document_class_factory",
         [
@@ -293,6 +296,7 @@ class TestViewRelatedDocumentButton:
     )
     def test_view_related_document_button_when_document_with_related_document_and_query_string(
         self,
+        mock_api_client,
         mock_get_document_by_uri,
         mock_pdf,
         uri,
@@ -320,6 +324,7 @@ class TestViewRelatedDocumentButton:
 
     @patch("judgments.views.detail.detail_html.DocumentPdf", autospec=True)
     @patch("judgments.views.detail.detail_html.get_published_document_by_uri")
+    @patch("judgments.resolvers.document_resolver_engine.api_client", side_effect=echo_resolution)
     @pytest.mark.parametrize(
         "uri,unexpected_text,unexpected_href",
         [
@@ -329,6 +334,7 @@ class TestViewRelatedDocumentButton:
     )
     def test_no_view_related_document_button_when_document_without_related_document(
         self,
+        mock_api_client,
         mock_get_document_by_uri,
         mock_pdf,
         uri,
